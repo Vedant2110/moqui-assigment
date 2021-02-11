@@ -1,0 +1,1078 @@
+--- 2021-02-11 16:00:36.768 [qtp515132998-91] ERROR                   org.moqui.impl.actions.XmlAction [] []
+ Error running groovy script (org.xml.sax.SAXParseException; lineNumber: 5; columnNumber: 21; XML document structures must start and end within the same entity.): 
+1 : import static org.moqui.util.ObjectUtilities.*
+2 : import static org.moqui.util.CollectionUtilities.*
+3 : import static org.moqui.util.StringUtilities.*
+4 : import java.sql.Timestamp
+5 : // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+6 : 
+7 : // begin inline script
+8 : org.moqui.entity.EntityDataLoader edl = ec.entity.makeDataLoader()
+9 :             String source = ""
+10 :             if (types) {
+11 :                 edl.dataTypes(new HashSet(Arrays.asList(types.split(","))))
+12 :                 if (components) edl.componentNameList(Arrays.asList(components.split(",")))
+13 :                 source = "Types: ${types}, Components: ${components}"
+14 :             } else if (location) {
+15 :                 edl.location(location)
+16 :                 source = location
+17 :             } else if (csvText) {
+18 :                 edl.csvText(csvText)
+19 :                 source = "CSV Text Box"
+20 :             } else if (jsonText) {
+21 :                 edl.jsonText(jsonText)
+22 :                 source = "JSON Text Box"
+23 :             } else if (xmlText) {
+24 :                 edl.xmlText(xmlText)
+25 :                 source = "XML Text Box"
+26 :             }
+27 :             if (timeout) edl.transactionTimeout(timeout as Integer)
+28 :             if (dummyFks) edl.dummyFks(true)
+29 :             if (useTryInsert) edl.useTryInsert(true)
+30 : 
+31 :             if (checkOnly) {
+32 :                 List messages = edl.check()
+33 :                 if (!messages) ec.message.addMessage(ec.l10n.localize("No differences found in check"))
+34 :                 ec.web.session.setAttribute("DataImport.messages", messages)
+35 :             } else if (onlyCreate) {
+36 :                 edl.onlyCreate(true)
+37 :                 List<String> messages = new LinkedList<>()
+38 :                 long recordsLoaded = edl.load(messages)
+39 :                 ec.message.addMessage("Loaded ${recordsLoaded} records from [${source}]")
+40 :                 ec.web.session.setAttribute("DataImport.messages", messages)
+41 :             } else {
+42 :                 List<String> messages = new LinkedList<>()
+43 :                 long recordsLoaded = edl.load(messages)
+44 :                 ec.message.addMessage("Loaded ${recordsLoaded} records from [${source}]")
+45 :                 ec.web.session.setAttribute("DataImport.messages", messages)
+46 :             }
+47 : // end inline script
+48 : // make sure the last statement is not considered the return value
+49 : return;
+
+
+--- 2021-02-11 16:00:36.770 [qtp515132998-91] ERROR                 org.moqui.impl.webapp.MoquiServlet [] []
+ Internal error processing request: org.xml.sax.SAXParseException; lineNumber: 5; columnNumber: 21; XML document structures must start and end within the same entity.
+org.xml.sax.SAXParseException: XML document structures must start and end within the same entity.
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source) ~[xercesImpl-2.12.0.jar:?]
+	at org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source) ~[xercesImpl-2.12.0.jar:?]
+	at org.moqui.impl.entity.EntityDataLoaderImpl$_internalRun_closure1$_closure2.doCall(EntityDataLoaderImpl.groovy:259) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.entity.EntityDataLoaderImpl$_internalRun_closure1$_closure2.call(EntityDataLoaderImpl.groovy) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.TransactionFacadeImpl.runUseOrBegin(TransactionFacadeImpl.groovy:168) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.entity.EntityDataLoaderImpl$_internalRun_closure1.doCall(EntityDataLoaderImpl.groovy:255) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.entity.EntityDataLoaderImpl$_internalRun_closure1.call(EntityDataLoaderImpl.groovy) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.TransactionFacadeImpl$_runRequireNew_closure1.doCall(TransactionFacadeImpl.groovy:198) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.TransactionFacadeImpl$_runRequireNew_closure1.call(TransactionFacadeImpl.groovy) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at groovy.lang.Closure.run(Closure.java:486) ~[groovy-2.5.8.jar:2.5.8]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_281]
+--- 2021-02-11 16:36:48.237 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearch
+java.lang.IllegalArgumentException: No up-and-running site-local (private) addresses found, got [name:lo (Software Loopback Interface 1), name:net0 (WAN Miniport (IKEv2)), name:net1 (Microsoft 6to4 Adapter), name:wlan0 (Microsoft Wi-Fi Direct Virtual Adapter #2), name:eth0 (WAN Miniport (IPv6)), name:eth1 (Microsoft Kernel Debug Network Adapter), name:net2 (Microsoft IP-HTTPS Platform Adapter), name:eth2 (Realtek USB GbE Family Controller), name:net3 (WAN Miniport (SSTP)), name:net4 (WAN Miniport (PPTP)), name:net5 (Microsoft Teredo Tunneling Adapter), name:wlan1 (Microsoft Wi-Fi Direct Virtual Adapter), name:net6 (WAN Miniport (L2TP)), name:eth3 (WAN Miniport (IP)), name:ppp0 (WAN Miniport (PPPOE)), name:wlan2 (Intel(R) Wireless-AC 9462), name:eth4 (WAN Miniport (Network Monitor)), name:wlan3 (Intel(R) Wireless-AC 9462-WFP Native MAC Layer LightWeight Filter-0000), name:wlan4 (Intel(R) Wireless-AC 9462-Virtual WiFi Filter Driver-0000), name:wlan5 (Intel(R) Wireless-AC 9462-Native WiFi Filter Driver-0000), name:wlan6 (Intel(R) Wireless-AC 9462-QoS Packet Scheduler-0000), name:wlan7 (Intel(R) Wireless-AC 9462-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan8 (Microsoft Wi-Fi Direct Virtual Adapter-QoS Packet Scheduler-0000), name:wlan9 (Microsoft Wi-Fi Direct Virtual Adapter-WFP Native MAC Layer LightWeight Filter-0000), name:eth5 (WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000), name:eth6 (WAN Miniport (IP)-QoS Packet Scheduler-0000), name:eth7 (WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000), name:eth8 (WAN Miniport (IPv6)-QoS Packet Scheduler-0000), name:eth9 (WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight Filter-0000), name:eth10 (WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000), name:wlan10 (Microsoft Wi-Fi Direct Virtual Adapter-Native WiFi Filter Driver-0000), name:wlan11 (Microsoft Wi-Fi Direct Virtual Adapter-WFP 802.3 MAC Layer LightWeight Filter-0000)]
+	at org.elasticsearch.common.network.NetworkUtils.getSiteLocalAddresses(NetworkUtils.java:184) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInternal(NetworkService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInetAddresses(NetworkService.java:187) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveBindHostAddresses(NetworkService.java:106) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TcpTransport.bindServer(TcpTransport.java:758) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.netty4.Netty4Transport.doStart(Netty4Transport.java:135) ~[transport-netty4-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TransportService.doStart(TransportService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.node.Node.start(Node.java:652) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.init(ElasticSearchToolFactory.groovy:119) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui-framework-2.1.3.jar:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at org.moqui.Moqui.dynamicInit(Moqui.java:61) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.webapp.MoquiContextListener.contextInitialized(MoquiContextListener.groovy:67) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.eclipse.jetty.server.handler.ContextHandler.callContextInitialized(ContextHandler.java:957) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.callContextInitialized(ServletContextHandler.java:553) [moqui_temp5238600316807711998execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:922) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:365) [moqui_temp5238600316807711998execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startWebapp(WebAppContext.java:1497) [moqui_temp8152488723880213499execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1459) [moqui_temp8152488723880213499execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:852) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:278) [moqui_temp5238600316807711998execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:545) [moqui_temp8152488723880213499execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:406) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.start(Server.java:418) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.doStart(Server.java:382) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:284) [moqui.war:?]
+--- 2021-02-11 16:36:48.239 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearchLogger
+java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy:144) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.getTool(ExecutionContextFactoryImpl.groovy:954) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.elasticsearch.ElasticSearchLoggerToolFactory.init(ElasticSearchLoggerToolFactory.groovy:58) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui-framework-2.1.3.jar:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at org.moqui.Moqui.dynamicInit(Moqui.java:61) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.webapp.MoquiContextListener.contextInitialized(MoquiContextListener.groovy:67) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.eclipse.jetty.server.handler.ContextHandler.callContextInitialized(ContextHandler.java:957) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.callContextInitialized(ServletContextHandler.java:553) [moqui_temp5238600316807711998execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:922) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:365) [moqui_temp5238600316807711998execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startWebapp(WebAppContext.java:1497) [moqui_temp8152488723880213499execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1459) [moqui_temp8152488723880213499execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:852) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:278) [moqui_temp5238600316807711998execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:545) [moqui_temp8152488723880213499execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:406) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.start(Server.java:418) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.doStart(Server.java:382) [moqui_temp5485109911536837278execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp1115968298513431476execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:284) [moqui.war:?]
+--- 2021-02-11 16:36:53.983 [           main] ERROR           org.moqui.impl.context.ElasticFacadeImpl [] []
+ Error initializing ElasticClient for cluster default: java.util.concurrent.ExecutionException: java.net.ConnectException: Connection refused: no further information
+--- 2021-02-11 16:36:54.196 [           main] ERROR    org.moqui.elasticsearch.ElasticRequestLogFilter [] []
+ Error getting EsClient instance: java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:36:54.196 [           main] ERROR    org.moqui.elasticsearch.ElasticRequestLogFilter [] []
+ In ElasticRequestLogFilter init could not find ElasticSearch tool
+--- 2021-02-11 16:46:03.147 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearch
+java.lang.IllegalArgumentException: No up-and-running site-local (private) addresses found, got [name:lo (Software Loopback Interface 1), name:net0 (WAN Miniport (IKEv2)), name:net1 (Microsoft 6to4 Adapter), name:wlan0 (Microsoft Wi-Fi Direct Virtual Adapter #2), name:eth0 (WAN Miniport (IPv6)), name:eth1 (Microsoft Kernel Debug Network Adapter), name:net2 (Microsoft IP-HTTPS Platform Adapter), name:eth2 (Realtek USB GbE Family Controller), name:net3 (WAN Miniport (SSTP)), name:net4 (WAN Miniport (PPTP)), name:net5 (Microsoft Teredo Tunneling Adapter), name:wlan1 (Microsoft Wi-Fi Direct Virtual Adapter), name:net6 (WAN Miniport (L2TP)), name:eth3 (WAN Miniport (IP)), name:ppp0 (WAN Miniport (PPPOE)), name:wlan2 (Intel(R) Wireless-AC 9462), name:eth4 (WAN Miniport (Network Monitor)), name:wlan3 (Intel(R) Wireless-AC 9462-WFP Native MAC Layer LightWeight Filter-0000), name:wlan4 (Intel(R) Wireless-AC 9462-Virtual WiFi Filter Driver-0000), name:wlan5 (Intel(R) Wireless-AC 9462-Native WiFi Filter Driver-0000), name:wlan6 (Intel(R) Wireless-AC 9462-QoS Packet Scheduler-0000), name:wlan7 (Intel(R) Wireless-AC 9462-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan8 (Microsoft Wi-Fi Direct Virtual Adapter-QoS Packet Scheduler-0000), name:wlan9 (Microsoft Wi-Fi Direct Virtual Adapter-WFP Native MAC Layer LightWeight Filter-0000), name:eth5 (WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000), name:eth6 (WAN Miniport (IP)-QoS Packet Scheduler-0000), name:eth7 (WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000), name:eth8 (WAN Miniport (IPv6)-QoS Packet Scheduler-0000), name:eth9 (WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight Filter-0000), name:eth10 (WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000), name:wlan10 (Microsoft Wi-Fi Direct Virtual Adapter-Native WiFi Filter Driver-0000), name:wlan11 (Microsoft Wi-Fi Direct Virtual Adapter-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan12 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP Native MAC Layer LightWeight Filter-0000), name:wlan13 (Microsoft Wi-Fi Direct Virtual Adapter #2-Native WiFi Filter Driver-0000), name:wlan14 (Microsoft Wi-Fi Direct Virtual Adapter #2-QoS Packet Scheduler-0000), name:wlan15 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP 802.3 MAC Layer LightWeight Filter-0000)]
+	at org.elasticsearch.common.network.NetworkUtils.getSiteLocalAddresses(NetworkUtils.java:184) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInternal(NetworkService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInetAddresses(NetworkService.java:187) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveBindHostAddresses(NetworkService.java:106) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TcpTransport.bindServer(TcpTransport.java:758) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.netty4.Netty4Transport.doStart(Netty4Transport.java:135) ~[transport-netty4-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TransportService.doStart(TransportService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.node.Node.start(Node.java:652) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.init(ElasticSearchToolFactory.groovy:119) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui_temp3241452938167458762WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui_temp3241452938167458762WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.nextService(ServiceLoader.java:380) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.next(ServiceLoader.java:404) [?:1.8.0_281]
+	at java.util.ServiceLoader$1.next(ServiceLoader.java:480) [?:1.8.0_281]
+	at org.moqui.Moqui.loadData(Moqui.java:118) [moqui_temp3241452938167458762WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:141) [moqui.war:?]
+--- 2021-02-11 16:46:03.148 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearchLogger
+java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy:144) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.getTool(ExecutionContextFactoryImpl.groovy:954) ~[moqui_temp3241452938167458762WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at org.moqui.elasticsearch.ElasticSearchLoggerToolFactory.init(ElasticSearchLoggerToolFactory.groovy:58) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui_temp3241452938167458762WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui_temp3241452938167458762WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.nextService(ServiceLoader.java:380) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.next(ServiceLoader.java:404) [?:1.8.0_281]
+	at java.util.ServiceLoader$1.next(ServiceLoader.java:480) [?:1.8.0_281]
+	at org.moqui.Moqui.loadData(Moqui.java:118) [moqui_temp3241452938167458762WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:141) [moqui.war:?]
+--- 2021-02-11 16:46:08.393 [           main] ERROR           org.moqui.impl.context.ElasticFacadeImpl [] []
+ Error initializing ElasticClient for cluster default: java.util.concurrent.ExecutionException: java.net.ConnectException: Connection refused: no further information
+--- 2021-02-11 16:46:12.564 [  MoquiWorker-2] ERROR                   org.moqui.impl.actions.XmlAction [] []
+ Error running groovy script (java.lang.IllegalStateException: ElasticSearchToolFactory not initialized): 
+1 : import static org.moqui.util.ObjectUtilities.*
+2 : import static org.moqui.util.CollectionUtilities.*
+3 : import static org.moqui.util.StringUtilities.*
+4 : import java.sql.Timestamp
+5 : // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+6 : 
+7 : // begin inline script
+8 : import org.elasticsearch.action.bulk.BulkItemResponse
+9 :             import org.elasticsearch.action.bulk.BulkRequestBuilder
+10 :             import org.elasticsearch.action.bulk.BulkRequest
+11 :             import org.elasticsearch.action.bulk.BulkResponse
+12 :             import org.elasticsearch.action.get.GetRequest
+13 :             import org.elasticsearch.action.get.GetResponse
+14 :             import org.elasticsearch.action.index.IndexRequest
+15 :             import org.elasticsearch.action.index.IndexResponse
+16 : 
+17 :             import org.slf4j.Logger
+18 :             import org.slf4j.LoggerFactory
+19 :             import org.moqui.context.ExecutionContext
+20 :             import org.moqui.elasticsearch.ElasticSearchUtil
+21 :             import org.moqui.elasticsearch.EsClient
+22 : 
+23 :             int docsPerBulk = 1000
+24 : 
+25 :             ExecutionContext ec = context.ec
+26 :             EsClient esClient = ec.getTool("ElasticSearch", EsClient.class)
+27 :             Logger logger = LoggerFactory.getLogger("org.moqui.search.SearchServices.indexDataDocuments")
+28 : 
+29 :             // Make sure all indices exist
+30 :             if (verifyIndexes) {
+31 :                 Set indexNames = new HashSet(documentList*._index)
+32 :                 for (String indexName in indexNames) esClient.checkCreateIndex(indexName)
+33 :                 Set dataDocumentIds = new HashSet(documentList*._type)
+34 :                 for (String dataDocumentId in dataDocumentIds) esClient.checkCreateDocIndex(dataDocumentId)
+35 :             }
+36 : 
+37 :             documentVersionList = []
+38 :             originalDocumentList = getOriginalDocuments ? [] : null
+39 :             BulkRequest bulkRequest = new BulkRequest()
+40 :             int curBulkDocs = 0
+41 :             for (Map document in documentList) {
+42 :                 // logger.warn("====== Indexing document: ${document}")
+43 : 
+44 :                 String _index = document._index
+45 :                 String _type = document._type
+46 :                 String _id = document._id
+47 :                 // String _timestamp = document._timestamp
+48 :                 // As of ES 2.0 _index, _type, _id, and _timestamp shouldn't be in document to be indexed
+49 :                 // clone document before removing fields so they are present for other code using the same data
+50 :                 document = new LinkedHashMap(document)
+51 :                 document.remove('_index'); document.remove('_type'); document.remove('_id'); document.remove('_timestamp')
+52 : 
+53 :                 // to better separate very different documents and prepare for ES6 the index name for ES is the dataDocumentId (_type) lower cased
+54 :                 String esIndexName = ElasticSearchUtil.ddIdToEsIndex(_type)
+55 : 
+56 :                 if (getOriginalDocuments) {
+57 :                     // this may fail for a number of reasons, like index doesn't exist yet, so catch the exception
+58 :                     try {
+59 :                         GetResponse gr = esClient.get(new GetRequest(esIndexName, _type, _id))
+60 :                         Map originalDocument = gr.getSourceAsMap()
+61 :                         if (originalDocument != null) {
+62 :                             // As of ES 2.0 _index, _type, _id aren't included in the document
+63 :                             originalDocument._index = gr.getIndex()
+64 :                             originalDocument._type = gr.getType()
+65 :                             originalDocument._id = gr.getId()
+66 :                             originalDocument._version = gr.getVersion()
+67 :                             originalDocumentList.add(originalDocument)
+68 :                         } else {
+69 :                             originalDocumentList.add([:])
+70 :                         }
+71 :                     } catch (Exception e) {
+72 :                         logger.info("Could not get original document for [${_index}, ${_type}, ${_id}]: ${e.toString()}")
+73 :                         originalDocumentList.add([:])
+74 :                     }
+75 :                 }
+76 : 
+77 :                 // before indexing convert types needed for ES
+78 :                 ElasticSearchUtil.convertTypesForEs(document)
+79 :                 // add the document to the bulk index
+80 :                 bulkRequest.add(new IndexRequest(esIndexName, _type, _id).source(document))
+81 :                 // .setIndex(esIndexName).setType(_type).setId(_id)
+82 :                 curBulkDocs++
+83 : 
+84 :                 if (curBulkDocs >= docsPerBulk) {
+85 :                     BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+86 :                     if (bulkResponse.hasFailures()) {
+87 :                         ec.message.addError(bulkResponse.buildFailureMessage())
+88 :                         curBulkDocs = 0
+89 :                         break
+90 :                     }
+91 : 
+92 :                     BulkItemResponse[] itemResponses = bulkResponse.getItems()
+93 :                     int itemResponsesSize = itemResponses.length
+94 :                     for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+95 : 
+96 :                     // create a new bulk builder for the next set
+97 :                     curBulkDocs = 0
+98 :                     bulkRequest = new BulkRequest()
+99 :                 }
+100 :             }
+101 :             if (curBulkDocs > 0) {
+102 :                 BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+103 :                 if (bulkResponse.hasFailures()) ec.message.addError(bulkResponse.buildFailureMessage())
+104 : 
+105 :                 BulkItemResponse[] itemResponses = bulkResponse.getItems()
+106 :                 int itemResponsesSize = itemResponses.length
+107 :                 for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+108 :             }
+109 : // end inline script
+110 : // make sure the last statement is not considered the return value
+111 : return;
+
+
+--- 2021-02-11 16:46:12.573 [  MoquiWorker-2] ERROR           org.moqui.impl.context.MessageFacadeImpl [] []
+ ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:46:13.733 [  MoquiWorker-3] ERROR                   org.moqui.impl.actions.XmlAction [] []
+ Error running groovy script (java.lang.IllegalStateException: ElasticSearchToolFactory not initialized): 
+1 : import static org.moqui.util.ObjectUtilities.*
+2 : import static org.moqui.util.CollectionUtilities.*
+3 : import static org.moqui.util.StringUtilities.*
+4 : import java.sql.Timestamp
+5 : // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+6 : 
+7 : // begin inline script
+8 : import org.elasticsearch.action.bulk.BulkItemResponse
+9 :             import org.elasticsearch.action.bulk.BulkRequestBuilder
+10 :             import org.elasticsearch.action.bulk.BulkRequest
+11 :             import org.elasticsearch.action.bulk.BulkResponse
+12 :             import org.elasticsearch.action.get.GetRequest
+13 :             import org.elasticsearch.action.get.GetResponse
+14 :             import org.elasticsearch.action.index.IndexRequest
+15 :             import org.elasticsearch.action.index.IndexResponse
+16 : 
+17 :             import org.slf4j.Logger
+18 :             import org.slf4j.LoggerFactory
+19 :             import org.moqui.context.ExecutionContext
+20 :             import org.moqui.elasticsearch.ElasticSearchUtil
+21 :             import org.moqui.elasticsearch.EsClient
+22 : 
+23 :             int docsPerBulk = 1000
+24 : 
+25 :             ExecutionContext ec = context.ec
+26 :             EsClient esClient = ec.getTool("ElasticSearch", EsClient.class)
+27 :             Logger logger = LoggerFactory.getLogger("org.moqui.search.SearchServices.indexDataDocuments")
+28 : 
+29 :             // Make sure all indices exist
+30 :             if (verifyIndexes) {
+31 :                 Set indexNames = new HashSet(documentList*._index)
+32 :                 for (String indexName in indexNames) esClient.checkCreateIndex(indexName)
+33 :                 Set dataDocumentIds = new HashSet(documentList*._type)
+34 :                 for (String dataDocumentId in dataDocumentIds) esClient.checkCreateDocIndex(dataDocumentId)
+35 :             }
+36 : 
+37 :             documentVersionList = []
+38 :             originalDocumentList = getOriginalDocuments ? [] : null
+39 :             BulkRequest bulkRequest = new BulkRequest()
+40 :             int curBulkDocs = 0
+41 :             for (Map document in documentList) {
+42 :                 // logger.warn("====== Indexing document: ${document}")
+43 : 
+44 :                 String _index = document._index
+45 :                 String _type = document._type
+46 :                 String _id = document._id
+47 :                 // String _timestamp = document._timestamp
+48 :                 // As of ES 2.0 _index, _type, _id, and _timestamp shouldn't be in document to be indexed
+49 :                 // clone document before removing fields so they are present for other code using the same data
+50 :                 document = new LinkedHashMap(document)
+51 :                 document.remove('_index'); document.remove('_type'); document.remove('_id'); document.remove('_timestamp')
+52 : 
+53 :                 // to better separate very different documents and prepare for ES6 the index name for ES is the dataDocumentId (_type) lower cased
+54 :                 String esIndexName = ElasticSearchUtil.ddIdToEsIndex(_type)
+55 : 
+56 :                 if (getOriginalDocuments) {
+57 :                     // this may fail for a number of reasons, like index doesn't exist yet, so catch the exception
+58 :                     try {
+59 :                         GetResponse gr = esClient.get(new GetRequest(esIndexName, _type, _id))
+60 :                         Map originalDocument = gr.getSourceAsMap()
+61 :                         if (originalDocument != null) {
+62 :                             // As of ES 2.0 _index, _type, _id aren't included in the document
+63 :                             originalDocument._index = gr.getIndex()
+64 :                             originalDocument._type = gr.getType()
+65 :                             originalDocument._id = gr.getId()
+66 :                             originalDocument._version = gr.getVersion()
+67 :                             originalDocumentList.add(originalDocument)
+68 :                         } else {
+69 :                             originalDocumentList.add([:])
+70 :                         }
+71 :                     } catch (Exception e) {
+72 :                         logger.info("Could not get original document for [${_index}, ${_type}, ${_id}]: ${e.toString()}")
+73 :                         originalDocumentList.add([:])
+74 :                     }
+75 :                 }
+76 : 
+77 :                 // before indexing convert types needed for ES
+78 :                 ElasticSearchUtil.convertTypesForEs(document)
+79 :                 // add the document to the bulk index
+80 :                 bulkRequest.add(new IndexRequest(esIndexName, _type, _id).source(document))
+81 :                 // .setIndex(esIndexName).setType(_type).setId(_id)
+82 :                 curBulkDocs++
+83 : 
+84 :                 if (curBulkDocs >= docsPerBulk) {
+85 :                     BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+86 :                     if (bulkResponse.hasFailures()) {
+87 :                         ec.message.addError(bulkResponse.buildFailureMessage())
+88 :                         curBulkDocs = 0
+89 :                         break
+90 :                     }
+91 : 
+92 :                     BulkItemResponse[] itemResponses = bulkResponse.getItems()
+93 :                     int itemResponsesSize = itemResponses.length
+94 :                     for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+95 : 
+96 :                     // create a new bulk builder for the next set
+97 :                     curBulkDocs = 0
+98 :                     bulkRequest = new BulkRequest()
+99 :                 }
+100 :             }
+101 :             if (curBulkDocs > 0) {
+102 :                 BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+103 :                 if (bulkResponse.hasFailures()) ec.message.addError(bulkResponse.buildFailureMessage())
+104 : 
+105 :                 BulkItemResponse[] itemResponses = bulkResponse.getItems()
+106 :                 int itemResponsesSize = itemResponses.length
+107 :                 for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+108 :             }
+109 : // end inline script
+110 : // make sure the last statement is not considered the return value
+111 : return;
+
+
+--- 2021-02-11 16:46:13.741 [  MoquiWorker-3] ERROR           org.moqui.impl.context.MessageFacadeImpl [] []
+ ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:46:14.761 [   RequireNewTx] ERROR                   org.moqui.impl.actions.XmlAction [] []
+ Error running groovy script (java.lang.IllegalStateException: ElasticSearchToolFactory not initialized): 
+1 : import static org.moqui.util.ObjectUtilities.*
+2 : import static org.moqui.util.CollectionUtilities.*
+3 : import static org.moqui.util.StringUtilities.*
+4 : import java.sql.Timestamp
+5 : // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+6 :     startTime = (System.currentTimeMillis())
+7 :     dfDocList_xafind = ec.entity.find("moqui.entity.feed.DataFeedDocument").useCache(true)
+8 :             .condition((org.moqui.entity.EntityCondition) ec.entity.conditionFactory.makeActionConditionDirect("dataFeedId", "equals", dataFeedId, null, null, false, false, false, "false"))
+9 :             dfDocList = dfDocList_xafind.list()
+10 :     if (true) {
+11 :         org.moqui.entity.EntityValue find_one_result = ec.entity.find("moqui.entity.feed.DataFeed").useCache(true)
+12 :                 .condition(context).one()
+13 :         if (df instanceof Map && !(df instanceof org.moqui.entity.EntityValue)) { if (find_one_result) df.putAll(find_one_result) } else { df = find_one_result }
+14 :     }
+15 :     if (df == null) {
+16 :         ec.message.addMessage(ec.resource.expand('''No DataFeed found for ID ${dataFeedId}''',''), "danger")
+17 :     return;
+18 :     }
+19 : 
+20 :     documentsIndexed = (0)
+21 : 
+22 : // begin inline script
+23 : import org.moqui.context.ExecutionContext
+24 :                 import org.moqui.elasticsearch.EsClient
+25 :                 import java.util.concurrent.Future
+26 : 
+27 :                 ExecutionContext ec = context.ec
+28 :                 EsClient esClient = ec.getTool("ElasticSearch", EsClient.class)
+29 :                 String feedReceiveServiceName = df.feedReceiveServiceName ?: 'org.moqui.search.SearchServices.index#DataDocuments'
+30 : 
+31 :                 for (Map dfDoc in dfDocList) {
+32 :                     ArrayList<Map> documentList = ec.entity.entityDataDocument.getDataDocuments(dfDoc.dataDocumentId, null, fromUpdateStamp, thruUpdatedStamp)
+33 :                     if (!documentList) continue
+34 :                     // make sure the index exists
+35 :                     esClient.checkCreateIndex((String) documentList.get(0).get("_index"))
+36 : 
+37 :                     // index the documents
+38 :                     int docListSize = documentList.size()
+39 :                     // NOTE: doing multiple threads doesn't make a big difference, the bulk indexing makes a huge difference, so effectively disabling this in the if expression
+40 :                     if (false) {
+41 :                         int numThreads = Runtime.getRuntime().availableProcessors() / 2
+42 :                         ec.logger.info("Indexing ${docListSize} type ${dfDoc.dataDocumentId} documents for feed ${dataFeedId} with ${numThreads} threads")
+43 :                         int subListSize = docListSize / numThreads
+44 :                         ArrayList<Future> futureList = new ArrayList<>(numThreads)
+45 :                         for (int i = 0; i < numThreads - 1; i++) {
+46 :                             futureList.add(ec.service.async().name(feedReceiveServiceName)
+47 :                                     .parameter("documentList", documentList.subList(i * subListSize, (i + 1) * subListSize))
+48 :                                     .parameter("verifyIndexes", false)
+49 :                                     .callFuture())
+50 :                         }
+51 :                         futureList.add(ec.service.async().name(feedReceiveServiceName)
+52 :                                 .parameter("documentList", documentList.subList((numThreads - 1) * subListSize, docListSize))
+53 :                                 .parameter("verifyIndexes", false)
+54 :                                 .callFuture())
+55 :                         for (Future future in futureList) future.get()
+56 :                     } else {
+57 :                         ec.logger.info("Indexing ${docListSize} type ${dfDoc.dataDocumentId} documents for feed ${dataFeedId}")
+58 :                         ec.service.sync().name(feedReceiveServiceName).parameter("documentList", documentList).call()
+59 :                     }
+60 :                     documentsIndexed += documentList.size()
+61 :                 }
+62 : // end inline script
+63 :         ec.message.addMessage(ec.resource.expand('''Indexed ${documentsIndexed} documents for feed ${dataFeedId} in ${System.currentTimeMillis() - startTime}ms''',''), "info")
+64 : // make sure the last statement is not considered the return value
+65 : return;
+
+
+--- 2021-02-11 16:46:14.761 [   RequireNewTx] ERROR           org.moqui.impl.context.MessageFacadeImpl [] []
+ ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:46:34.441 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearch
+java.lang.IllegalArgumentException: No up-and-running site-local (private) addresses found, got [name:lo (Software Loopback Interface 1), name:net0 (WAN Miniport (IKEv2)), name:net1 (Microsoft 6to4 Adapter), name:wlan0 (Microsoft Wi-Fi Direct Virtual Adapter #2), name:eth0 (WAN Miniport (IPv6)), name:eth1 (Microsoft Kernel Debug Network Adapter), name:net2 (Microsoft IP-HTTPS Platform Adapter), name:eth2 (Realtek USB GbE Family Controller), name:net3 (WAN Miniport (SSTP)), name:net4 (WAN Miniport (PPTP)), name:net5 (Microsoft Teredo Tunneling Adapter), name:wlan1 (Microsoft Wi-Fi Direct Virtual Adapter), name:net6 (WAN Miniport (L2TP)), name:eth3 (WAN Miniport (IP)), name:ppp0 (WAN Miniport (PPPOE)), name:wlan2 (Intel(R) Wireless-AC 9462), name:eth4 (WAN Miniport (Network Monitor)), name:wlan3 (Intel(R) Wireless-AC 9462-WFP Native MAC Layer LightWeight Filter-0000), name:wlan4 (Intel(R) Wireless-AC 9462-Virtual WiFi Filter Driver-0000), name:wlan5 (Intel(R) Wireless-AC 9462-Native WiFi Filter Driver-0000), name:wlan6 (Intel(R) Wireless-AC 9462-QoS Packet Scheduler-0000), name:wlan7 (Intel(R) Wireless-AC 9462-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan8 (Microsoft Wi-Fi Direct Virtual Adapter-QoS Packet Scheduler-0000), name:wlan9 (Microsoft Wi-Fi Direct Virtual Adapter-WFP Native MAC Layer LightWeight Filter-0000), name:eth5 (WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000), name:eth6 (WAN Miniport (IP)-QoS Packet Scheduler-0000), name:eth7 (WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000), name:eth8 (WAN Miniport (IPv6)-QoS Packet Scheduler-0000), name:eth9 (WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight Filter-0000), name:eth10 (WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000), name:wlan10 (Microsoft Wi-Fi Direct Virtual Adapter-Native WiFi Filter Driver-0000), name:wlan11 (Microsoft Wi-Fi Direct Virtual Adapter-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan12 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP Native MAC Layer LightWeight Filter-0000), name:wlan13 (Microsoft Wi-Fi Direct Virtual Adapter #2-Native WiFi Filter Driver-0000), name:wlan14 (Microsoft Wi-Fi Direct Virtual Adapter #2-QoS Packet Scheduler-0000), name:wlan15 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP 802.3 MAC Layer LightWeight Filter-0000)]
+	at org.elasticsearch.common.network.NetworkUtils.getSiteLocalAddresses(NetworkUtils.java:184) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInternal(NetworkService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInetAddresses(NetworkService.java:187) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveBindHostAddresses(NetworkService.java:106) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TcpTransport.bindServer(TcpTransport.java:758) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.netty4.Netty4Transport.doStart(Netty4Transport.java:135) ~[transport-netty4-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TransportService.doStart(TransportService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.node.Node.start(Node.java:652) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.init(ElasticSearchToolFactory.groovy:119) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui-framework-2.1.3.jar:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at org.moqui.Moqui.dynamicInit(Moqui.java:61) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.webapp.MoquiContextListener.contextInitialized(MoquiContextListener.groovy:67) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.eclipse.jetty.server.handler.ContextHandler.callContextInitialized(ContextHandler.java:957) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.callContextInitialized(ServletContextHandler.java:553) [moqui_temp8846857448563673392execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:922) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:365) [moqui_temp8846857448563673392execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startWebapp(WebAppContext.java:1497) [moqui_temp4747073212076269663execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1459) [moqui_temp4747073212076269663execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:852) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:278) [moqui_temp8846857448563673392execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:545) [moqui_temp4747073212076269663execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:406) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.start(Server.java:418) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.doStart(Server.java:382) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:284) [moqui.war:?]
+--- 2021-02-11 16:46:34.444 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearchLogger
+java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy:144) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.getTool(ExecutionContextFactoryImpl.groovy:954) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.elasticsearch.ElasticSearchLoggerToolFactory.init(ElasticSearchLoggerToolFactory.groovy:58) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui-framework-2.1.3.jar:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at org.moqui.Moqui.dynamicInit(Moqui.java:61) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.webapp.MoquiContextListener.contextInitialized(MoquiContextListener.groovy:67) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.eclipse.jetty.server.handler.ContextHandler.callContextInitialized(ContextHandler.java:957) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.callContextInitialized(ServletContextHandler.java:553) [moqui_temp8846857448563673392execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:922) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:365) [moqui_temp8846857448563673392execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startWebapp(WebAppContext.java:1497) [moqui_temp4747073212076269663execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1459) [moqui_temp4747073212076269663execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:852) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:278) [moqui_temp8846857448563673392execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:545) [moqui_temp4747073212076269663execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:406) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.start(Server.java:418) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.doStart(Server.java:382) [moqui_temp3393844318066864017execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp6097560296800403615execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:284) [moqui.war:?]
+--- 2021-02-11 16:46:39.894 [           main] ERROR           org.moqui.impl.context.ElasticFacadeImpl [] []
+ Error initializing ElasticClient for cluster default: java.util.concurrent.ExecutionException: java.net.ConnectException: Connection refused: no further information
+--- 2021-02-11 16:46:40.080 [           main] ERROR    org.moqui.elasticsearch.ElasticRequestLogFilter [] []
+ Error getting EsClient instance: java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:46:40.080 [           main] ERROR    org.moqui.elasticsearch.ElasticRequestLogFilter [] []
+ In ElasticRequestLogFilter init could not find ElasticSearch tool
+--- 2021-02-11 16:49:47.892 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearch
+java.lang.IllegalArgumentException: No up-and-running site-local (private) addresses found, got [name:lo (Software Loopback Interface 1), name:net0 (WAN Miniport (IKEv2)), name:net1 (Microsoft 6to4 Adapter), name:wlan0 (Microsoft Wi-Fi Direct Virtual Adapter #2), name:eth0 (WAN Miniport (IPv6)), name:eth1 (Microsoft Kernel Debug Network Adapter), name:net2 (Microsoft IP-HTTPS Platform Adapter), name:eth2 (Realtek USB GbE Family Controller), name:net3 (WAN Miniport (SSTP)), name:net4 (WAN Miniport (PPTP)), name:net5 (Microsoft Teredo Tunneling Adapter), name:wlan1 (Microsoft Wi-Fi Direct Virtual Adapter), name:net6 (WAN Miniport (L2TP)), name:eth3 (WAN Miniport (IP)), name:ppp0 (WAN Miniport (PPPOE)), name:wlan2 (Intel(R) Wireless-AC 9462), name:eth4 (WAN Miniport (Network Monitor)), name:wlan3 (Intel(R) Wireless-AC 9462-WFP Native MAC Layer LightWeight Filter-0000), name:wlan4 (Intel(R) Wireless-AC 9462-Virtual WiFi Filter Driver-0000), name:wlan5 (Intel(R) Wireless-AC 9462-Native WiFi Filter Driver-0000), name:wlan6 (Intel(R) Wireless-AC 9462-QoS Packet Scheduler-0000), name:wlan7 (Intel(R) Wireless-AC 9462-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan8 (Microsoft Wi-Fi Direct Virtual Adapter-QoS Packet Scheduler-0000), name:wlan9 (Microsoft Wi-Fi Direct Virtual Adapter-WFP Native MAC Layer LightWeight Filter-0000), name:eth5 (WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000), name:eth6 (WAN Miniport (IP)-QoS Packet Scheduler-0000), name:eth7 (WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000), name:eth8 (WAN Miniport (IPv6)-QoS Packet Scheduler-0000), name:eth9 (WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight Filter-0000), name:eth10 (WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000), name:wlan10 (Microsoft Wi-Fi Direct Virtual Adapter-Native WiFi Filter Driver-0000), name:wlan11 (Microsoft Wi-Fi Direct Virtual Adapter-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan12 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP Native MAC Layer LightWeight Filter-0000), name:wlan13 (Microsoft Wi-Fi Direct Virtual Adapter #2-Native WiFi Filter Driver-0000), name:wlan14 (Microsoft Wi-Fi Direct Virtual Adapter #2-QoS Packet Scheduler-0000), name:wlan15 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP 802.3 MAC Layer LightWeight Filter-0000)]
+	at org.elasticsearch.common.network.NetworkUtils.getSiteLocalAddresses(NetworkUtils.java:184) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInternal(NetworkService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInetAddresses(NetworkService.java:187) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveBindHostAddresses(NetworkService.java:106) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TcpTransport.bindServer(TcpTransport.java:758) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.netty4.Netty4Transport.doStart(Netty4Transport.java:135) ~[transport-netty4-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TransportService.doStart(TransportService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.node.Node.start(Node.java:652) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.init(ElasticSearchToolFactory.groovy:119) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui_temp4047902190757736052WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui_temp4047902190757736052WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.nextService(ServiceLoader.java:380) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.next(ServiceLoader.java:404) [?:1.8.0_281]
+	at java.util.ServiceLoader$1.next(ServiceLoader.java:480) [?:1.8.0_281]
+	at org.moqui.Moqui.loadData(Moqui.java:118) [moqui_temp4047902190757736052WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:141) [moqui.war:?]
+--- 2021-02-11 16:49:47.895 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearchLogger
+java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy:144) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.getTool(ExecutionContextFactoryImpl.groovy:954) ~[moqui_temp4047902190757736052WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at org.moqui.elasticsearch.ElasticSearchLoggerToolFactory.init(ElasticSearchLoggerToolFactory.groovy:58) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui_temp4047902190757736052WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui_temp4047902190757736052WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.nextService(ServiceLoader.java:380) [?:1.8.0_281]
+	at java.util.ServiceLoader$LazyIterator.next(ServiceLoader.java:404) [?:1.8.0_281]
+	at java.util.ServiceLoader$1.next(ServiceLoader.java:480) [?:1.8.0_281]
+	at org.moqui.Moqui.loadData(Moqui.java:118) [moqui_temp4047902190757736052WEB-INF_lib_moqui-framework-2.1.3.jar.:2.1.3]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:141) [moqui.war:?]
+--- 2021-02-11 16:49:53.131 [           main] ERROR           org.moqui.impl.context.ElasticFacadeImpl [] []
+ Error initializing ElasticClient for cluster default: java.util.concurrent.ExecutionException: java.net.ConnectException: Connection refused: no further information
+--- 2021-02-11 16:49:57.200 [  MoquiWorker-2] ERROR                   org.moqui.impl.actions.XmlAction [] []
+ Error running groovy script (java.lang.IllegalStateException: ElasticSearchToolFactory not initialized): 
+1 : import static org.moqui.util.ObjectUtilities.*
+2 : import static org.moqui.util.CollectionUtilities.*
+3 : import static org.moqui.util.StringUtilities.*
+4 : import java.sql.Timestamp
+5 : // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+6 : 
+7 : // begin inline script
+8 : import org.elasticsearch.action.bulk.BulkItemResponse
+9 :             import org.elasticsearch.action.bulk.BulkRequestBuilder
+10 :             import org.elasticsearch.action.bulk.BulkRequest
+11 :             import org.elasticsearch.action.bulk.BulkResponse
+12 :             import org.elasticsearch.action.get.GetRequest
+13 :             import org.elasticsearch.action.get.GetResponse
+14 :             import org.elasticsearch.action.index.IndexRequest
+15 :             import org.elasticsearch.action.index.IndexResponse
+16 : 
+17 :             import org.slf4j.Logger
+18 :             import org.slf4j.LoggerFactory
+19 :             import org.moqui.context.ExecutionContext
+20 :             import org.moqui.elasticsearch.ElasticSearchUtil
+21 :             import org.moqui.elasticsearch.EsClient
+22 : 
+23 :             int docsPerBulk = 1000
+24 : 
+25 :             ExecutionContext ec = context.ec
+26 :             EsClient esClient = ec.getTool("ElasticSearch", EsClient.class)
+27 :             Logger logger = LoggerFactory.getLogger("org.moqui.search.SearchServices.indexDataDocuments")
+28 : 
+29 :             // Make sure all indices exist
+30 :             if (verifyIndexes) {
+31 :                 Set indexNames = new HashSet(documentList*._index)
+32 :                 for (String indexName in indexNames) esClient.checkCreateIndex(indexName)
+33 :                 Set dataDocumentIds = new HashSet(documentList*._type)
+34 :                 for (String dataDocumentId in dataDocumentIds) esClient.checkCreateDocIndex(dataDocumentId)
+35 :             }
+36 : 
+37 :             documentVersionList = []
+38 :             originalDocumentList = getOriginalDocuments ? [] : null
+39 :             BulkRequest bulkRequest = new BulkRequest()
+40 :             int curBulkDocs = 0
+41 :             for (Map document in documentList) {
+42 :                 // logger.warn("====== Indexing document: ${document}")
+43 : 
+44 :                 String _index = document._index
+45 :                 String _type = document._type
+46 :                 String _id = document._id
+47 :                 // String _timestamp = document._timestamp
+48 :                 // As of ES 2.0 _index, _type, _id, and _timestamp shouldn't be in document to be indexed
+49 :                 // clone document before removing fields so they are present for other code using the same data
+50 :                 document = new LinkedHashMap(document)
+51 :                 document.remove('_index'); document.remove('_type'); document.remove('_id'); document.remove('_timestamp')
+52 : 
+53 :                 // to better separate very different documents and prepare for ES6 the index name for ES is the dataDocumentId (_type) lower cased
+54 :                 String esIndexName = ElasticSearchUtil.ddIdToEsIndex(_type)
+55 : 
+56 :                 if (getOriginalDocuments) {
+57 :                     // this may fail for a number of reasons, like index doesn't exist yet, so catch the exception
+58 :                     try {
+59 :                         GetResponse gr = esClient.get(new GetRequest(esIndexName, _type, _id))
+60 :                         Map originalDocument = gr.getSourceAsMap()
+61 :                         if (originalDocument != null) {
+62 :                             // As of ES 2.0 _index, _type, _id aren't included in the document
+63 :                             originalDocument._index = gr.getIndex()
+64 :                             originalDocument._type = gr.getType()
+65 :                             originalDocument._id = gr.getId()
+66 :                             originalDocument._version = gr.getVersion()
+67 :                             originalDocumentList.add(originalDocument)
+68 :                         } else {
+69 :                             originalDocumentList.add([:])
+70 :                         }
+71 :                     } catch (Exception e) {
+72 :                         logger.info("Could not get original document for [${_index}, ${_type}, ${_id}]: ${e.toString()}")
+73 :                         originalDocumentList.add([:])
+74 :                     }
+75 :                 }
+76 : 
+77 :                 // before indexing convert types needed for ES
+78 :                 ElasticSearchUtil.convertTypesForEs(document)
+79 :                 // add the document to the bulk index
+80 :                 bulkRequest.add(new IndexRequest(esIndexName, _type, _id).source(document))
+81 :                 // .setIndex(esIndexName).setType(_type).setId(_id)
+82 :                 curBulkDocs++
+83 : 
+84 :                 if (curBulkDocs >= docsPerBulk) {
+85 :                     BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+86 :                     if (bulkResponse.hasFailures()) {
+87 :                         ec.message.addError(bulkResponse.buildFailureMessage())
+88 :                         curBulkDocs = 0
+89 :                         break
+90 :                     }
+91 : 
+92 :                     BulkItemResponse[] itemResponses = bulkResponse.getItems()
+93 :                     int itemResponsesSize = itemResponses.length
+94 :                     for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+95 : 
+96 :                     // create a new bulk builder for the next set
+97 :                     curBulkDocs = 0
+98 :                     bulkRequest = new BulkRequest()
+99 :                 }
+100 :             }
+101 :             if (curBulkDocs > 0) {
+102 :                 BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+103 :                 if (bulkResponse.hasFailures()) ec.message.addError(bulkResponse.buildFailureMessage())
+104 : 
+105 :                 BulkItemResponse[] itemResponses = bulkResponse.getItems()
+106 :                 int itemResponsesSize = itemResponses.length
+107 :                 for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+108 :             }
+109 : // end inline script
+110 : // make sure the last statement is not considered the return value
+111 : return;
+
+
+--- 2021-02-11 16:49:57.203 [  MoquiWorker-2] ERROR           org.moqui.impl.context.MessageFacadeImpl [] []
+ ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:49:58.280 [  MoquiWorker-3] ERROR                   org.moqui.impl.actions.XmlAction [] []
+ Error running groovy script (java.lang.IllegalStateException: ElasticSearchToolFactory not initialized): 
+1 : import static org.moqui.util.ObjectUtilities.*
+2 : import static org.moqui.util.CollectionUtilities.*
+3 : import static org.moqui.util.StringUtilities.*
+4 : import java.sql.Timestamp
+5 : // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+6 : 
+7 : // begin inline script
+8 : import org.elasticsearch.action.bulk.BulkItemResponse
+9 :             import org.elasticsearch.action.bulk.BulkRequestBuilder
+10 :             import org.elasticsearch.action.bulk.BulkRequest
+11 :             import org.elasticsearch.action.bulk.BulkResponse
+12 :             import org.elasticsearch.action.get.GetRequest
+13 :             import org.elasticsearch.action.get.GetResponse
+14 :             import org.elasticsearch.action.index.IndexRequest
+15 :             import org.elasticsearch.action.index.IndexResponse
+16 : 
+17 :             import org.slf4j.Logger
+18 :             import org.slf4j.LoggerFactory
+19 :             import org.moqui.context.ExecutionContext
+20 :             import org.moqui.elasticsearch.ElasticSearchUtil
+21 :             import org.moqui.elasticsearch.EsClient
+22 : 
+23 :             int docsPerBulk = 1000
+24 : 
+25 :             ExecutionContext ec = context.ec
+26 :             EsClient esClient = ec.getTool("ElasticSearch", EsClient.class)
+27 :             Logger logger = LoggerFactory.getLogger("org.moqui.search.SearchServices.indexDataDocuments")
+28 : 
+29 :             // Make sure all indices exist
+30 :             if (verifyIndexes) {
+31 :                 Set indexNames = new HashSet(documentList*._index)
+32 :                 for (String indexName in indexNames) esClient.checkCreateIndex(indexName)
+33 :                 Set dataDocumentIds = new HashSet(documentList*._type)
+34 :                 for (String dataDocumentId in dataDocumentIds) esClient.checkCreateDocIndex(dataDocumentId)
+35 :             }
+36 : 
+37 :             documentVersionList = []
+38 :             originalDocumentList = getOriginalDocuments ? [] : null
+39 :             BulkRequest bulkRequest = new BulkRequest()
+40 :             int curBulkDocs = 0
+41 :             for (Map document in documentList) {
+42 :                 // logger.warn("====== Indexing document: ${document}")
+43 : 
+44 :                 String _index = document._index
+45 :                 String _type = document._type
+46 :                 String _id = document._id
+47 :                 // String _timestamp = document._timestamp
+48 :                 // As of ES 2.0 _index, _type, _id, and _timestamp shouldn't be in document to be indexed
+49 :                 // clone document before removing fields so they are present for other code using the same data
+50 :                 document = new LinkedHashMap(document)
+51 :                 document.remove('_index'); document.remove('_type'); document.remove('_id'); document.remove('_timestamp')
+52 : 
+53 :                 // to better separate very different documents and prepare for ES6 the index name for ES is the dataDocumentId (_type) lower cased
+54 :                 String esIndexName = ElasticSearchUtil.ddIdToEsIndex(_type)
+55 : 
+56 :                 if (getOriginalDocuments) {
+57 :                     // this may fail for a number of reasons, like index doesn't exist yet, so catch the exception
+58 :                     try {
+59 :                         GetResponse gr = esClient.get(new GetRequest(esIndexName, _type, _id))
+60 :                         Map originalDocument = gr.getSourceAsMap()
+61 :                         if (originalDocument != null) {
+62 :                             // As of ES 2.0 _index, _type, _id aren't included in the document
+63 :                             originalDocument._index = gr.getIndex()
+64 :                             originalDocument._type = gr.getType()
+65 :                             originalDocument._id = gr.getId()
+66 :                             originalDocument._version = gr.getVersion()
+67 :                             originalDocumentList.add(originalDocument)
+68 :                         } else {
+69 :                             originalDocumentList.add([:])
+70 :                         }
+71 :                     } catch (Exception e) {
+72 :                         logger.info("Could not get original document for [${_index}, ${_type}, ${_id}]: ${e.toString()}")
+73 :                         originalDocumentList.add([:])
+74 :                     }
+75 :                 }
+76 : 
+77 :                 // before indexing convert types needed for ES
+78 :                 ElasticSearchUtil.convertTypesForEs(document)
+79 :                 // add the document to the bulk index
+80 :                 bulkRequest.add(new IndexRequest(esIndexName, _type, _id).source(document))
+81 :                 // .setIndex(esIndexName).setType(_type).setId(_id)
+82 :                 curBulkDocs++
+83 : 
+84 :                 if (curBulkDocs >= docsPerBulk) {
+85 :                     BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+86 :                     if (bulkResponse.hasFailures()) {
+87 :                         ec.message.addError(bulkResponse.buildFailureMessage())
+88 :                         curBulkDocs = 0
+89 :                         break
+90 :                     }
+91 : 
+92 :                     BulkItemResponse[] itemResponses = bulkResponse.getItems()
+93 :                     int itemResponsesSize = itemResponses.length
+94 :                     for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+95 : 
+96 :                     // create a new bulk builder for the next set
+97 :                     curBulkDocs = 0
+98 :                     bulkRequest = new BulkRequest()
+99 :                 }
+100 :             }
+101 :             if (curBulkDocs > 0) {
+102 :                 BulkResponse bulkResponse = esClient.bulk(bulkRequest)
+103 :                 if (bulkResponse.hasFailures()) ec.message.addError(bulkResponse.buildFailureMessage())
+104 : 
+105 :                 BulkItemResponse[] itemResponses = bulkResponse.getItems()
+106 :                 int itemResponsesSize = itemResponses.length
+107 :                 for (int i = 0; i < itemResponsesSize; i++) documentVersionList.add(itemResponses[i].getVersion())
+108 :             }
+109 : // end inline script
+110 : // make sure the last statement is not considered the return value
+111 : return;
+
+
+--- 2021-02-11 16:49:58.280 [  MoquiWorker-3] ERROR           org.moqui.impl.context.MessageFacadeImpl [] []
+ ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:49:59.275 [   RequireNewTx] ERROR                   org.moqui.impl.actions.XmlAction [] []
+ Error running groovy script (java.lang.IllegalStateException: ElasticSearchToolFactory not initialized): 
+1 : import static org.moqui.util.ObjectUtilities.*
+2 : import static org.moqui.util.CollectionUtilities.*
+3 : import static org.moqui.util.StringUtilities.*
+4 : import java.sql.Timestamp
+5 : // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+6 :     startTime = (System.currentTimeMillis())
+7 :     dfDocList_xafind = ec.entity.find("moqui.entity.feed.DataFeedDocument").useCache(true)
+8 :             .condition((org.moqui.entity.EntityCondition) ec.entity.conditionFactory.makeActionConditionDirect("dataFeedId", "equals", dataFeedId, null, null, false, false, false, "false"))
+9 :             dfDocList = dfDocList_xafind.list()
+10 :     if (true) {
+11 :         org.moqui.entity.EntityValue find_one_result = ec.entity.find("moqui.entity.feed.DataFeed").useCache(true)
+12 :                 .condition(context).one()
+13 :         if (df instanceof Map && !(df instanceof org.moqui.entity.EntityValue)) { if (find_one_result) df.putAll(find_one_result) } else { df = find_one_result }
+14 :     }
+15 :     if (df == null) {
+16 :         ec.message.addMessage(ec.resource.expand('''No DataFeed found for ID ${dataFeedId}''',''), "danger")
+17 :     return;
+18 :     }
+19 : 
+20 :     documentsIndexed = (0)
+21 : 
+22 : // begin inline script
+23 : import org.moqui.context.ExecutionContext
+24 :                 import org.moqui.elasticsearch.EsClient
+25 :                 import java.util.concurrent.Future
+26 : 
+27 :                 ExecutionContext ec = context.ec
+28 :                 EsClient esClient = ec.getTool("ElasticSearch", EsClient.class)
+29 :                 String feedReceiveServiceName = df.feedReceiveServiceName ?: 'org.moqui.search.SearchServices.index#DataDocuments'
+30 : 
+31 :                 for (Map dfDoc in dfDocList) {
+32 :                     ArrayList<Map> documentList = ec.entity.entityDataDocument.getDataDocuments(dfDoc.dataDocumentId, null, fromUpdateStamp, thruUpdatedStamp)
+33 :                     if (!documentList) continue
+34 :                     // make sure the index exists
+35 :                     esClient.checkCreateIndex((String) documentList.get(0).get("_index"))
+36 : 
+37 :                     // index the documents
+38 :                     int docListSize = documentList.size()
+39 :                     // NOTE: doing multiple threads doesn't make a big difference, the bulk indexing makes a huge difference, so effectively disabling this in the if expression
+40 :                     if (false) {
+41 :                         int numThreads = Runtime.getRuntime().availableProcessors() / 2
+42 :                         ec.logger.info("Indexing ${docListSize} type ${dfDoc.dataDocumentId} documents for feed ${dataFeedId} with ${numThreads} threads")
+43 :                         int subListSize = docListSize / numThreads
+44 :                         ArrayList<Future> futureList = new ArrayList<>(numThreads)
+45 :                         for (int i = 0; i < numThreads - 1; i++) {
+46 :                             futureList.add(ec.service.async().name(feedReceiveServiceName)
+47 :                                     .parameter("documentList", documentList.subList(i * subListSize, (i + 1) * subListSize))
+48 :                                     .parameter("verifyIndexes", false)
+49 :                                     .callFuture())
+50 :                         }
+51 :                         futureList.add(ec.service.async().name(feedReceiveServiceName)
+52 :                                 .parameter("documentList", documentList.subList((numThreads - 1) * subListSize, docListSize))
+53 :                                 .parameter("verifyIndexes", false)
+54 :                                 .callFuture())
+55 :                         for (Future future in futureList) future.get()
+56 :                     } else {
+57 :                         ec.logger.info("Indexing ${docListSize} type ${dfDoc.dataDocumentId} documents for feed ${dataFeedId}")
+58 :                         ec.service.sync().name(feedReceiveServiceName).parameter("documentList", documentList).call()
+59 :                     }
+60 :                     documentsIndexed += documentList.size()
+61 :                 }
+62 : // end inline script
+63 :         ec.message.addMessage(ec.resource.expand('''Indexed ${documentsIndexed} documents for feed ${dataFeedId} in ${System.currentTimeMillis() - startTime}ms''',''), "info")
+64 : // make sure the last statement is not considered the return value
+65 : return;
+
+
+--- 2021-02-11 16:49:59.277 [   RequireNewTx] ERROR           org.moqui.impl.context.MessageFacadeImpl [] []
+ ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:50:21.876 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearch
+java.lang.IllegalArgumentException: No up-and-running site-local (private) addresses found, got [name:lo (Software Loopback Interface 1), name:net0 (WAN Miniport (IKEv2)), name:net1 (Microsoft 6to4 Adapter), name:wlan0 (Microsoft Wi-Fi Direct Virtual Adapter #2), name:eth0 (WAN Miniport (IPv6)), name:eth1 (Microsoft Kernel Debug Network Adapter), name:net2 (Microsoft IP-HTTPS Platform Adapter), name:eth2 (Realtek USB GbE Family Controller), name:net3 (WAN Miniport (SSTP)), name:net4 (WAN Miniport (PPTP)), name:net5 (Microsoft Teredo Tunneling Adapter), name:wlan1 (Microsoft Wi-Fi Direct Virtual Adapter), name:net6 (WAN Miniport (L2TP)), name:eth3 (WAN Miniport (IP)), name:ppp0 (WAN Miniport (PPPOE)), name:wlan2 (Intel(R) Wireless-AC 9462), name:eth4 (WAN Miniport (Network Monitor)), name:wlan3 (Intel(R) Wireless-AC 9462-WFP Native MAC Layer LightWeight Filter-0000), name:wlan4 (Intel(R) Wireless-AC 9462-Virtual WiFi Filter Driver-0000), name:wlan5 (Intel(R) Wireless-AC 9462-Native WiFi Filter Driver-0000), name:wlan6 (Intel(R) Wireless-AC 9462-QoS Packet Scheduler-0000), name:wlan7 (Intel(R) Wireless-AC 9462-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan8 (Microsoft Wi-Fi Direct Virtual Adapter-QoS Packet Scheduler-0000), name:wlan9 (Microsoft Wi-Fi Direct Virtual Adapter-WFP Native MAC Layer LightWeight Filter-0000), name:eth5 (WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000), name:eth6 (WAN Miniport (IP)-QoS Packet Scheduler-0000), name:eth7 (WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000), name:eth8 (WAN Miniport (IPv6)-QoS Packet Scheduler-0000), name:eth9 (WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight Filter-0000), name:eth10 (WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000), name:wlan10 (Microsoft Wi-Fi Direct Virtual Adapter-Native WiFi Filter Driver-0000), name:wlan11 (Microsoft Wi-Fi Direct Virtual Adapter-WFP 802.3 MAC Layer LightWeight Filter-0000), name:wlan12 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP Native MAC Layer LightWeight Filter-0000), name:wlan13 (Microsoft Wi-Fi Direct Virtual Adapter #2-Native WiFi Filter Driver-0000), name:wlan14 (Microsoft Wi-Fi Direct Virtual Adapter #2-QoS Packet Scheduler-0000), name:wlan15 (Microsoft Wi-Fi Direct Virtual Adapter #2-WFP 802.3 MAC Layer LightWeight Filter-0000)]
+	at org.elasticsearch.common.network.NetworkUtils.getSiteLocalAddresses(NetworkUtils.java:184) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInternal(NetworkService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveInetAddresses(NetworkService.java:187) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.network.NetworkService.resolveBindHostAddresses(NetworkService.java:106) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TcpTransport.bindServer(TcpTransport.java:758) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.netty4.Netty4Transport.doStart(Netty4Transport.java:135) ~[transport-netty4-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.transport.TransportService.doStart(TransportService.java:213) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.common.component.AbstractLifecycleComponent.start(AbstractLifecycleComponent.java:66) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.elasticsearch.node.Node.start(Node.java:652) ~[elasticsearch-6.3.2.jar:6.3.2]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.init(ElasticSearchToolFactory.groovy:119) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui-framework-2.1.3.jar:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at org.moqui.Moqui.dynamicInit(Moqui.java:61) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.webapp.MoquiContextListener.contextInitialized(MoquiContextListener.groovy:67) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.eclipse.jetty.server.handler.ContextHandler.callContextInitialized(ContextHandler.java:957) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.callContextInitialized(ServletContextHandler.java:553) [moqui_temp3946240581513515739execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:922) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:365) [moqui_temp3946240581513515739execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startWebapp(WebAppContext.java:1497) [moqui_temp7830160040935611589execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1459) [moqui_temp7830160040935611589execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:852) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:278) [moqui_temp3946240581513515739execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:545) [moqui_temp7830160040935611589execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:406) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.start(Server.java:418) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.doStart(Server.java:382) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:284) [moqui.war:?]
+--- 2021-02-11 16:50:21.880 [           main] ERROR org.moqui.impl.context.ExecutionContextFactoryImpl [] []
+ Error initializing ToolFactory ElasticSearchLogger
+java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy:144) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.elasticsearch.ElasticSearchToolFactory.getInstance(ElasticSearchToolFactory.groovy) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.getTool(ExecutionContextFactoryImpl.groovy:954) ~[moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.elasticsearch.ElasticSearchLoggerToolFactory.init(ElasticSearchLoggerToolFactory.groovy:58) ~[moqui-elasticsearch-1.2.2.jar:?]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.postFacadeInit(ExecutionContextFactoryImpl.groovy:544) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.context.ExecutionContextFactoryImpl.<init>(ExecutionContextFactoryImpl.groovy:230) [moqui-framework-2.1.3.jar:2.1.3]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [?:1.8.0_281]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [?:1.8.0_281]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [?:1.8.0_281]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) [?:1.8.0_281]
+	at java.lang.Class.newInstance(Class.java:442) [?:1.8.0_281]
+	at org.moqui.Moqui.dynamicInit(Moqui.java:61) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.moqui.impl.webapp.MoquiContextListener.contextInitialized(MoquiContextListener.groovy:67) [moqui-framework-2.1.3.jar:2.1.3]
+	at org.eclipse.jetty.server.handler.ContextHandler.callContextInitialized(ContextHandler.java:957) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.callContextInitialized(ServletContextHandler.java:553) [moqui_temp3946240581513515739execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:922) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:365) [moqui_temp3946240581513515739execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startWebapp(WebAppContext.java:1497) [moqui_temp7830160040935611589execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1459) [moqui_temp7830160040935611589execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:852) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:278) [moqui_temp3946240581513515739execlib_jetty-servlet-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:545) [moqui_temp7830160040935611589execlib_jetty-webapp-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:406) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:167) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.start(Server.java:418) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:110) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.server.Server.doStart(Server.java:382) [moqui_temp7721962841471675181execlib_jetty-server-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68) [moqui_temp7951642243178546653execlib_jetty-util-9.4.18.v20190429.jar.:9.4.18.v20190429]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_281]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_281]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_281]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_281]
+	at MoquiStart.main(MoquiStart.java:284) [moqui.war:?]
+--- 2021-02-11 16:50:27.353 [           main] ERROR           org.moqui.impl.context.ElasticFacadeImpl [] []
+ Error initializing ElasticClient for cluster default: java.util.concurrent.ExecutionException: java.net.ConnectException: Connection refused: no further information
+--- 2021-02-11 16:50:27.544 [           main] ERROR    org.moqui.elasticsearch.ElasticRequestLogFilter [] []
+ Error getting EsClient instance: java.lang.IllegalStateException: ElasticSearchToolFactory not initialized
+--- 2021-02-11 16:50:27.544 [           main] ERROR    org.moqui.elasticsearch.ElasticRequestLogFilter [] []
+ In ElasticRequestLogFilter init could not find ElasticSearch tool
