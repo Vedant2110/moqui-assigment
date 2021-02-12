@@ -3,6 +3,9 @@
         xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-2.1.xsd">
     <entity entity-name="Example" package="Example">
         <field name="exampleID" type="id" is-pk="true"/>
-        <field name="examplename" type="text-medium"/>
+        <field name="exampleName" type="text-medium"/>
+        <field name="exampleData" type="text-medium"/>
+         <field name="examplePrice" type="text-medium"/>
+          <field name="exampleQuantity" type="text-medium"/>
     </entity>
 </entities>
